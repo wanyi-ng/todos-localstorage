@@ -9,6 +9,7 @@ import { ChevronUpDownIcon, PencilSquareIcon, TrashIcon } from '@heroicons/react
 interface TodoState {
   todos: Todo[];
   addTodo: (description: string) => void;
+  updateTodo: ({ id, description }: { id: string; description: string; }) => void;
   deleteTodo: (id: string) => void;
   markAsCompleted: (id: string) => void;
   deleteAllTodos: () => void;
@@ -16,8 +17,12 @@ interface TodoState {
 
 export default function TodoForm() {
   const [todo, setTodo] = useState('')
-  const { addTodo, deleteTodo, markAsCompleted, deleteAllTodos, todos } = useStore() as TodoState
+  const { addTodo, updateTodo, deleteTodo, markAsCompleted, deleteAllTodos, todos } = useStore() as TodoState
   const [rearrangeTodos, setRearrangeTodos] = useState<Todo[]>([])
+
+  const [activeTodo, setActiveTodo] = useState<string | null>(null)
+  const [showEditInput, setShowEditInput] = useState(false)
+  const [newTodoDescription, setNewTodoDescription] = useState('')
 
   useEffect(() => {
     setRearrangeTodos(todos)
@@ -57,19 +62,49 @@ export default function TodoForm() {
                 <div className='flex items-center gap-4'>
                   <ChevronUpDownIcon className='size-4' />
                   <input type='checkbox' defaultChecked={item.completed} onClick={() => markAsCompleted(item.id)} />
-                  <p>{item.description}</p>
+                  {showEditInput && activeTodo === item.id ? (
+                    <input
+                      className='text-black'
+                      type='text'
+                      defaultValue={item.description}
+                      onChange={(e) => setNewTodoDescription(e.target.value)}
+                    />
+                  ) : (
+                    <p>{item.description}</p>
+                  )}
                 </div>
                 <div className='flex items-center gap-6'>
-                  <button
-                    type='button'
-                    className='p-2 hover:scale-125 rounded-[4px] hover:text-red-500'
-                    onClick={() => deleteTodo(item.id)}
-                  >
-                    <TrashIcon className='size-4' />
-                  </button>
-                  <button type='button' className='p-2 hover:scale-125'>
-                    <PencilSquareIcon className='size-4' />
-                  </button>
+                  {showEditInput && activeTodo === item.id ? (
+                    <button
+                      type='button'
+                      onClick={() => {
+                        updateTodo({ id: item.id, description: newTodoDescription })
+                        setNewTodoDescription('')
+                        setActiveTodo(null)
+                        setShowEditInput(false)
+                      }}
+                    >Save</button>
+                  ) : (
+                    <>
+                      <button
+                        type='button'
+                        className='p-2 hover:scale-125 rounded-[4px] hover:text-red-500'
+                        onClick={() => deleteTodo(item.id)}
+                      >
+                        <TrashIcon className='size-4' />
+                      </button>
+                      <button
+                        type='button'
+                        className='p-2 hover:scale-125'
+                        onClick={() => {
+                          setActiveTodo(item.id)                        
+                          setShowEditInput(true)
+                        }}
+                      >
+                        <PencilSquareIcon className='size-4' />
+                      </button>
+                    </>
+                  )}
                 </div>
               </Reorder.Item>
             ))}
