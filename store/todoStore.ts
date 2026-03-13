@@ -14,6 +14,11 @@ export const useStore = create(
           todos: [{ id: uuidv4(), description, completed: false }, ...state.todos ]
         }))
       },
+      updateTodo: ({ id, description }: { id: string, description: string }) => {
+        set((state: any) => ({
+          todos: state.todos.map((todo: Todo) => todo.id === id ? { ...todo, description: description } : todo)
+        }))
+      },
       deleteTodo: (id: string) => {
         set((state: any) => ({
           todos: state.todos.filter((todo: Todo) => todo.id !== id)
