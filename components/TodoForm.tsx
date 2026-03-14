@@ -97,7 +97,8 @@ export default function TodoForm() {
                         type='button'
                         className='p-2 hover:scale-125'
                         onClick={() => {
-                          setActiveTodo(item.id)                        
+                          setActiveTodo(item.id)
+                          setNewTodoDescription(item.description)                        
                           setShowEditInput(true)
                         }}
                       >
