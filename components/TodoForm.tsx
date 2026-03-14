@@ -59,18 +59,18 @@ export default function TodoForm() {
           <Reorder.Group axis='y' values={rearrangeTodos} onReorder={setRearrangeTodos}>
             {rearrangeTodos && rearrangeTodos.map((item: Todo) => (
               <Reorder.Item key={item.id} value={item} className={`${item.completed === true ? 'line-through' : '' } flex justify-between items-center gap-4 hover:bg-zinc-300/30 rounded-[4px] pl-4 pr-2 py-2 hover:cursor-grab`}>
-                <div className='flex items-center gap-4'>
+                <div className='flex items-center gap-4 w-full'>
                   <ChevronUpDownIcon className='size-4' />
                   <input type='checkbox' defaultChecked={item.completed} onClick={() => markAsCompleted(item.id)} />
                   {showEditInput && activeTodo === item.id ? (
                     <input
-                      className='text-black'
+                      className='px-2 py-1 w-full dark:text-zinc-900'
                       type='text'
                       defaultValue={item.description}
                       onChange={(e) => setNewTodoDescription(e.target.value)}
                     />
                   ) : (
-                    <p>{item.description}</p>
+                    <p className='px-2 py-1 w-full'>{item.description}</p>
                   )}
                 </div>
                 <div className='flex items-center gap-6'>
