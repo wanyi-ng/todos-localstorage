@@ -67,7 +67,17 @@ export default function TodoForm() {
                       className='px-2 py-1 w-full dark:text-zinc-900'
                       type='text'
                       defaultValue={item.description}
-                      onChange={(e) => setNewTodoDescription(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          updateTodo({ id: item.id, description: newTodoDescription })
+                          setNewTodoDescription('')
+                          setActiveTodo(null)
+                          setShowEditInput(false)
+                        }
+                      }}
+                      onChange={(e) => {
+                        setNewTodoDescription(e.target.value)
+                      }}
                     />
                   ) : (
                     <p className='px-2 py-1 w-full'>{item.description}</p>
